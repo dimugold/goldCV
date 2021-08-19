@@ -34,7 +34,7 @@ if(isset($_POST['btn-submit']))
     
         $mail->setFrom($visitor_email, $fullname);
        
-        $mail->addAddress('dimugold@gmaqil.com', 'Gold Oluwadimu');
+        $mail->addAddress('dimugold@gmail.com', 'Gold Oluwadimu');
         $mail->addReplyTo($visitor_email, $fullname); 
 
         $mail->IsHTML(true);
