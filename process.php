@@ -1,34 +1,52 @@
 <?php
 
+include_once "vendor/autoload.php";
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+$mail = new PHPMailer(true);
+
+
+
 if(isset($_POST['btn-submit']))
 {
-    $Fullname = $_POST['fullname'];
+    $fullname = $_POST['fullname'];
     $visitor_email = $_POST['email'];
-    $Subject = $_POST['subject'];
-    $Message = $_POST['message'];
+    $subject = $_POST['subject'];
+    $message = $_POST['message'];
     
     $to = "dimugold@gmail.com";
-    $subject = $Subject;
+    $subject = $subject;
     
-    $message = "The sender's Email is:{$visitor_email} The message is: ".$Message;
+    $message = "The sender's Email is:{$visitor_email} The message is: ".$message;
    
-    // Always set content-type when sending HTML email
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    try {
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER; 
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
     
-    // More headers
-    $headers .= 'From: <dimugold@gmail.com>';
+        $mail->Username = 'dimugold@gmail.com'; 
+        $mail->Password = 'gold2579'; 
     
-    $mail = mail($to,$subject,$message,$headers);
+        $mail->setFrom($visitor_email, $fullname);
+       
+        $mail->addAddress('dimugold@gmaqil.com', 'Gold Oluwadimu');
+        $mail->addReplyTo($visitor_email, $fullname); 
 
-    if($mail)
-    {
-        echo "<script>alert('Mail has been sent.')</script>";
+        $mail->IsHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $message;
+
+        $mail->send();
+        echo "Email message sent.";
+    } catch (Exception $e) {
+        echo "Error in sending email. Mailer Error: {$mail->ErrorInfo}";
     }
-    else
-    {
-        echo "<script>alert('Mail not sent.')</script>";
-    }
+
 
 }
-    ?>
+?>
